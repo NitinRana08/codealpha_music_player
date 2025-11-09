@@ -1,114 +1,104 @@
+const ad= document.querySelector('.song');
+const playing=document.querySelector('.fa-play');
+const pause=document.querySelector('.fa-pause');
+const forw=document.querySelector('.fa-forward-step');
+const ttl=document.querySelector('.title');
+const art_img=document.querySelector('#artist');
+const art_name=document.querySelector('#name');
+const playSong=document.querySelector('#playSong');
 
-const songs = [
-  {
-    title: "Sad Gaana",
-    artist: "Bali, AN1K8T",
-    src: "song1.mp3",
-    album: "album1.jpg",
-    lyrics: [
-      "Ye goat kya hai meri bakar dekh",
-      "Kal se ...",
-      "Last time mai roya ...",
-      "Sad gaane gaaunga ...",
-      "Santra nahi ..."
-    ]
-  }
-];
+const artist_name=['Faheem Abdullah','Masoom Sharma','B Praak','Jeetu Sharma','Karan Aujla'];
 
-const audio = new Audio();
-let index = 0;
+const artist_title=['Saiyaara ','Lofer','Saari Duniya Jalaa Denge','Har Har Shambhu Shiv Mahadeva ','I Really Do'];
 
-const playlist = document.getElementById("playlist");
-const lyricsBox = document.getElementById("lyrics");
-const albumArt = document.getElementById("albumArt");
-const songTitle = document.getElementById("songTitle");
-const songArtist = document.getElementById("songArtist");
-const footerSong = document.getElementById("footerSong");
-const footerArtist = document.getElementById("footerArtist");
-const playBtn = document.getElementById("play");
-const nextBtn = document.getElementById("next");
-const prevBtn = document.getElementById("prev");
-const progress = document.getElementById("progress");
-const currentTimeText = document.getElementById("currentTime");
-const durationText = document.getElementById("duration");
-const volume = document.getElementById("volume");
+playSong.addEventListener('click',effect);
 
-function loadSong(i) {
-  index = i;
-  const s = songs[i];
-
-  audio.src = s.src;
-  albumArt.src = s.album;
-  songTitle.textContent = s.title;
-  songArtist.textContent = s.artist;
-  footerSong.textContent = s.title;
-  footerArtist.textContent = s.artist;
-
-  lyricsBox.innerHTML = s.lyrics
-    .map((line, idx) => `<p id='l${idx}'>${line}</p>`)
-    .join("");
-
-  highlightPlaylist();
+function effect(){
+    if(ad.duration==ad.currentTime){
+        x+=1;
+    }
+    if(!playing.classList.contains('none')){
+        ad.play();
+        setInterval(prog,1000);
+        setInterval(line,1000);
+        progress.addEventListener('click',(e)=>{
+            var widthbar2=(e.offsetX/e.target.clientWidth)*ad.duration;
+            ad.currentTime=widthbar2;
+        })
+    }
+    else {
+        ad.pause();
+    }
+    ttl.classList.toggle('run');
+    playing.classList.toggle('none');
+    pause.classList.toggle('none');
+    art_img.classList.toggle('round');
+    dur();
 }
 
-function highlightPlaylist() {
-  [...playlist.children].forEach((li, i) => {
-    li.classList.toggle("active-track", i === index);
-  });
+function removeEffect(){
+    ad.pause();
+    ad.currentTime=0.01;
+    ttl.classList.remove('run');
+    playing.classList.remove('none');
+    pause.classList.add('none');
+    art_img.classList.remove('round');
 }
 
-playBtn.onclick = () => {
-  if (audio.paused) {
-    audio.play();
-    playBtn.textContent = "⏸️";
-  } else {
-    audio.pause();
-    playBtn.textContent = "▶️";
-  }
-};
-
-nextBtn.onclick = () => {
-  index = (index + 1) % songs.length;
-  loadSong(index);
-  audio.play();
-  playBtn.textContent = "⏸️";
-};
-
-prevBtn.onclick = () => {
-  index = (index - 1 + songs.length) % songs.length;
-  loadSong(index);
-  audio.play();
-  playBtn.textContent = "⏸️";
-};
-
-audio.ontimeupdate = () => {
-  progress.value = (audio.currentTime / audio.duration) * 100;
-  currentTimeText.textContent = formatTime(audio.currentTime);
-  durationText.textContent = formatTime(audio.duration);
-};
-
-progress.oninput = () => {
-  audio.currentTime = (progress.value * audio.duration) / 100;
-};
-
-volume.oninput = () => (audio.volume = volume.value);
-
-function formatTime(sec) {
-  if (isNaN(sec)) return "0:00";
-  let m = Math.floor(sec / 60);
-  let s = Math.floor(sec % 60).toString().padStart(2, "0");
-  return `${m}:${s}`;
+var x=0;
+function backward(){
+    dur();
+    x-=1;
+    removeEffect();
+    songs(x);
+    if(x<=0){
+        x=artist_name.length;
+    }
+}
+function forward(){
+    dur();
+    x+=1;
+    removeEffect();
+    songs(x);
+    if(x>=artist_name.length-1){
+        x=-1;
+    }
 }
 
-songs.forEach((s, i) => {
-  const li = document.createElement("li");
-  li.textContent = s.title + " - " + s.artist;
-  li.onclick = () => {
-    loadSong(i);
-    audio.play();
-    playBtn.textContent = "⏸️";
-  };
-  playlist.appendChild(li);
-});
+function songs(x){
+    art_name.innerHTML=artist_name[x];
+    ttl.innerHTML=artist_title[x];
+    art_img.src=`./images/${x}.jpg`;
+    ad.src=`./songs/s${x}.mp3`;
+}
+songs(0);
 
-loadSong(0);
+const lines = document.querySelector('.lineChild');
+const progress = document.querySelector('.line');
+const strt = document.querySelector('#start');
+const end =document.querySelector('#end');
+
+function dur(){
+    var dura=ad.duration;
+    var secdu=Math.floor(dura%60);
+    var mindu=Math.floor(dura/60);
+    if(secdu<10){
+        secdu=`0${secdu}`;
+    }
+    end.innerHTML=`${mindu}:${secdu}`
+}
+
+function prog(){
+    var currTime=ad.currentTime;
+    var mincur=Math.floor(currTime/60);
+    var seccur=Math.floor(currTime%60);
+    if(seccur<10){
+        seccur=`0${seccur}`;
+    }
+    strt.innerHTML=`${mincur}:${seccur}`;
+}
+
+function line(){
+    var widthbar=(ad.currentTime/ad.duration)*100;
+    lines.style.width=`${widthbar}%`;
+}
