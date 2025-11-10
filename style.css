@@ -152,6 +152,26 @@ i{
     background-color: black;
     border-radius: 50%;
 }
+.volumeBox{
+    width: 80%;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#volume{
+    width: 100%;
+    cursor: pointer;
+    accent-color: black;  /* slider color */
+}
+
+.volumeBox i{
+    font-size: 20px;
+    color: white;
+}
+
+
 
 /* TABLETS */
 @media (max-width: 768px) {

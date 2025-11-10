@@ -7,9 +7,10 @@ const art_img=document.querySelector('#artist');
 const art_name=document.querySelector('#name');
 const playSong=document.querySelector('#playSong');
 
-const artist_name=['Faheem Abdullah','Masoom Sharma','B Praak','Jeetu Sharma','Karan Aujla'];
 
-const artist_title=['Saiyaara ','Lofer','Saari Duniya Jalaa Denge','Har Har Shambhu Shiv Mahadeva ','I Really Do'];
+const artist_name=['Talwiinder','The Weeknd','AP Dhillon','The Weeknd','Karan Aujla'];
+
+const artist_title=['Tu','Timeless','With You','Die for you','I Really Do'];
 
 playSong.addEventListener('click',effect);
 
@@ -102,3 +103,8 @@ function line(){
     var widthbar=(ad.currentTime/ad.duration)*100;
     lines.style.width=`${widthbar}%`;
 }
+const volume = document.querySelector('#volume');
+
+volume.addEventListener('input', ()=>{
+    ad.volume = volume.value;
+});
